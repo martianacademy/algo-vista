@@ -1,0 +1,40 @@
+{
+    "name": "algo-vista-bots",
+    "version": "1.0.0",
+    "description": "Trading bots for cryptocurrency, stocks, and MT5",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "dev": "tsx watch crypto/cex/examples.ts",
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "test": "jest",
+        "lint": "eslint . --ext .ts",
+        "type-check": "tsc --noEmit"
+    },
+    "keywords": [
+        "trading",
+        "crypto",
+        "bot",
+        "ccxt",
+        "algorithmic-trading"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "ccxt": "^4.4.44",
+        "chalk": "^5.6.2",
+        "dotenv": "^16.4.7"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.5",
+        "@typescript-eslint/eslint-plugin": "^8.19.1",
+        "@typescript-eslint/parser": "^8.19.1",
+        "eslint": "^9.17.0",
+        "tsx": "^4.21.0",
+        "typescript": "^5.7.3"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

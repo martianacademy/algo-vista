@@ -1,0 +1,16 @@
+# Market Maker Bot Commands
+
+## Run ASK Bot (Selling)
+EXCHANGE=xt SYMBOL=ORBD/USDT SIDE=ask TOTAL_QUOTE_AMOUNT=5.5 SPREAD_PERCENT=20 NUMBER_OF_ORDERS=20 PRICE_REFERENCE=mid npx tsx crypto/cex/mm/mm-mono-side.ts
+
+## Run BID Bot (Buying)
+EXCHANGE=xt SYMBOL=ORBD/USDT SIDE=bid TOTAL_QUOTE_AMOUNT=5.5 SPREAD_PERCENT=20 NUMBER_OF_ORDERS=20 PRICE_REFERENCE=mid npx tsx crypto/cex/mm/mm-mono-side.ts
+
+## Environment Variables:
+- EXCHANGE: Exchange name (default: "xt")
+- SYMBOL: Trading pair (default: "ORBD/USDT")
+- SIDE: "bid" (buying) or "ask" (selling)
+- TOTAL_QUOTE_AMOUNT: Total amount in quote currency to spread across orders
+- SPREAD_PERCENT: Spread percentage from reference price
+- NUMBER_OF_ORDERS: Number of orders to place
+- PRICE_REFERENCE: "first_ask", "first_bid", "mid", or "best"
