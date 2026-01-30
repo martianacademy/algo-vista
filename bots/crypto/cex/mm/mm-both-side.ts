@@ -598,9 +598,9 @@ export async function startBot(
         }
     }, intervalSeconds * 1000);
 
-    // Graceful shutdown
-    process.on("SIGINT", async () => {
-        console.log(chalk.yellow(`\n\n🛑 Shutting down...`));
+    // Graceful shutdown handler
+    const shutdown = async (signal: string) => {
+        console.log(chalk.yellow(`\n\n🛑 Received ${signal} - Shutting down...`));
         clearInterval(monitorInterval);
 
         console.log(
@@ -612,13 +612,29 @@ export async function startBot(
 
         try {
             await exchange.cancelAllOrders(config.symbol);
-            console.log(chalk.green(`✅ All orders cancelled`));
+            console.log(chalk.green(`✅ All orders cancelled successfully`));
         } catch (error) {
             console.error(chalk.red(`❌ Error cancelling orders:`), error);
         }
 
         console.log(chalk.green(`✅ Bot stopped\n`));
         process.exit(0);
+    };
+
+    // Handle various termination signals
+    process.on("SIGINT", () => shutdown("SIGINT"));   // Ctrl+C
+    process.on("SIGTERM", () => shutdown("SIGTERM")); // Kill command
+    process.on("SIGHUP", () => shutdown("SIGHUP"));   // Terminal closed
+
+    // Handle uncaught errors
+    process.on("uncaughtException", async (error) => {
+        console.error(chalk.red(`\n❌ Uncaught Exception:`), error);
+        await shutdown("uncaughtException");
+    });
+
+    process.on("unhandledRejection", async (reason, promise) => {
+        console.error(chalk.red(`\n❌ Unhandled Rejection at:`), promise, "reason:", reason);
+        await shutdown("unhandledRejection");
     });
 }
 
