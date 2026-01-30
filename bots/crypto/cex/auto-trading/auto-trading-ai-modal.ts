@@ -874,7 +874,7 @@ export async function startBot(
 
     if (config.exchangeApiKey) {
         // Custom credentials: create exchange with defaultConfig settings
-        const ExchangeClass = ccxt[config.exchange] as typeof ccxt.Exchange;
+        const ExchangeClass = (ccxt as any)[config.exchange] as typeof ccxt.Exchange;
         exchange = new ExchangeClass({
             apiKey: config.exchangeApiKey,
             secret: config.exchangeSecret,

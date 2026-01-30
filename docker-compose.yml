@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  # Next.js Web App
+  # Next.js Dev Server
   web:
     build:
       context: .
@@ -9,9 +9,12 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
     volumes:
-      - ./.env:/app/.env:ro
+      - .:/app
+      - /app/node_modules
+      - /app/bots/node_modules
+      - /app/.next
     restart: unless-stopped
     container_name: algo-vista-web
 
@@ -20,9 +23,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: node bots/crypto/cex/auto-trading/auto-trading-futures-binance.js
+    command: npx tsx bots/crypto/cex/auto-trading/auto-trading-futures-binance.ts
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - SYMBOL=${SYMBOL:-BTC/USDT:USDT}
       - POSITION_SIZE=${POSITION_SIZE:-10}
       - LEVERAGE=${LEVERAGE:-10}
@@ -31,23 +34,14 @@ services:
       - CHECK_INTERVAL_SECONDS=${CHECK_INTERVAL_SECONDS:-60}
     env_file:
       - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/bots/node_modules
     restart: unless-stopped
     container_name: algo-vista-bot-futures
     depends_on:
       - web
-
-  # Spot Trading Bot (if needed)
-  # bot-spot:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   command: node bots/crypto/cex/auto-trading/auto-trading-ai-modal.js
-  #   environment:
-  #     - NODE_ENV=production
-  #     - SYMBOL=${SYMBOL_SPOT:-BTC/USDT}
-  #   env_file:
-  #     - .env
-  #   restart: unless-stopped
   #   container_name: algo-vista-bot-spot
   #   depends_on:
   #     - web
