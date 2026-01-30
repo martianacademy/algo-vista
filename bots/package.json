@@ -22,6 +22,7 @@
     "author": "",
     "license": "MIT",
     "dependencies": {
+        "@openrouter/sdk": "^0.5.1",
         "ccxt": "^4.4.44",
         "chalk": "^5.6.2",
         "dotenv": "^16.4.7"

@@ -35,6 +35,7 @@ declare module 'ccxt' {
 
         setSandboxMode(enabled: boolean): void;
         market(symbol: string): any;
+        createMarketBuyOrderWithCost(symbol: string, cost: number, params?: any): Promise<any>;
     }
 
     export const exchanges: string[];
