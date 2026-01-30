@@ -10,7 +10,7 @@ COPY package*.json ./
 COPY bots/package.json ./bots/
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 RUN cd bots && npm install
 
 # Rebuild the source code only when needed
