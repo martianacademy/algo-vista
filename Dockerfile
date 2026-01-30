@@ -5,13 +5,13 @@ FROM node:20-alpine AS base
 FROM base AS deps
 WORKDIR /app
 
-# Copy package files
+# Copy package files (root has lock file, bots doesn't)
 COPY package*.json ./
-COPY bots/package*.json ./bots/
+COPY bots/package.json ./bots/
 
 # Install dependencies
 RUN npm ci
-RUN cd bots && npm ci
+RUN cd bots && npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -22,15 +22,15 @@ COPY --from=deps /app/bots/node_modules ./bots/node_modules
 COPY . .
 
 # Build Next.js app
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # Production image, copy all files and run
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -53,8 +53,8 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 # Default command runs Next.js app
 # To run bots, override with: docker run <image> node bots/crypto/cex/auto-trading/auto-trading-futures-binance.js
