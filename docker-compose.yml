@@ -1,47 +1,23 @@
 version: "3.8"
 
 services:
-  # Next.js Dev Server
-  web:
+  algo-vista:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=development
     volumes:
       - .:/app
-      - /app/node_modules
-      - /app/bots/node_modules
-      - /app/.next
+    stdin_open: true
+    tty: true
+    container_name: algo-vista
     restart: unless-stopped
-    container_name: algo-vista-web
 
-  # Binance Futures Trading Bot
-  bot-futures:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: npx tsx bots/crypto/cex/auto-trading/auto-trading-futures-binance.ts
-    environment:
-      - NODE_ENV=development
-      - SYMBOL=${SYMBOL:-BTC/USDT:USDT}
-      - POSITION_SIZE=${POSITION_SIZE:-10}
-      - LEVERAGE=${LEVERAGE:-10}
-      - STOP_LOSS_PERCENT=${STOP_LOSS_PERCENT:-1}
-      - TAKE_PROFIT_PERCENT=${TAKE_PROFIT_PERCENT:-2}
-      - CHECK_INTERVAL_SECONDS=${CHECK_INTERVAL_SECONDS:-60}
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/bots/node_modules
-    restart: unless-stopped
-    container_name: algo-vista-bot-futures
-    depends_on:
-      - web
+networks:
+  default:
+    name: algo-vista-network
+
   #   container_name: algo-vista-bot-spot
   #   depends_on:
   #     - web

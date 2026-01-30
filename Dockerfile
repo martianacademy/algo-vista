@@ -1,22 +1,23 @@
-# Development Dockerfile - No build, just run dev server
-FROM node:20-alpine
+# Simple Ubuntu environment with Node.js
+FROM ubuntu:25.04
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY bots/package.json ./bots/
-
-# Install all dependencies (including dev dependencies)
-RUN npm install
-RUN cd bots && npm install
+# Install Node.js and npm
+RUN apt-get update && apt-get install -y \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy all source code
 COPY . .
 
-# Expose ports
+# Expose port
 EXPOSE 3000
 
-# Default: Run Next.js dev server
-CMD ["npm", "run", "dev"]
+# Keep container running - access with: docker exec -it <container> bash
+CMD ["tail", "-f", "/dev/null"]
+
 
